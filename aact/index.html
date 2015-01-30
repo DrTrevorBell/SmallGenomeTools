@@ -1,0 +1,58 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>HVDR Automatic Alignment Clean-up Tool</title>
+<link rel="stylesheet" type="text/css" href="/res/hvdr.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<style type="text/css">
+.hidden { visibility: hidden; }
+.unhidden { visibility: visible; }
+td { text-align : center; }
+td.shade1 { background: lightblue; }
+td.shade2 { background: #ffff99; }
+td.shade3 { background: pink; }
+fieldset { width: 50%; }
+input.aminoacid1 { text-align:center; background:lightblue; color:darkslategrey; font-weight:bold; }
+input.aminoacid2 { text-align:center; background:#ffff99; color:darkslategrey; font-weight:bold; }
+input.nucleotide { text-align:center; }
+div.instructions { font-family:monospace; }
+a:focus { outline: 0; }
+em.i { font-style:oblique; font-weight:normal; text-decoration:none; }
+em.b{ font-style:normal; font-weight:bold; text-decoration:none; }
+legend { font-weight:bold; padding:0.2em 0.5em; border:1px solid green; color:green; font-size:120%; font-family:monospace; background:lightgreen; }
+<!-- http://www.pixy.cz/blogg/clanky/css-fieldsetandlabels.html -->
+</style>
+
+<noscript>
+<div class="dotted_red" style="border-width:1.5px; color:darkred; font-size:12px; font-family:monospace;" align="center">
+This site works better with JavaScript enabled. It is strongly recommended that you enable JavaScript and <a href="">reload</a> the page.
+</div>
+</noscript>
+</head>
+<body>
+<h1>HVDR Online Tools</h1>
+<div class="note">Hepatitis Virus Diversity Research <a href="http://www.wits.ac.za/health/hvdrp">Programme</a>, University of the Witwatersrand</div>
+<h2><img src="/res/aact.png" style="vertical-align:middle"> Automatic Alignment Clean-up Tool</h2>
+
+<br>
+
+<p class="explain">Specify the sequence file to be uploaded below. The file should contain <b>aligned</b> sequences, <b>all of the same length</b>, in FASTA format. Bases in the output FASTA file may be converted to uppercase characters by some of the options below.</p><br>
+<form method="post" action="/cgi-bin/aact.cgi" enctype="multipart/form-data">
+<fieldset><legend>Input File</legend>
+<table><tr><td>Sequence file (FASTA format): <input type="file" size="32" name="infile"/></td></tr></table>
+</fieldset>
+<br>
+<fieldset><legend>Options</legend>
+<input type=checkbox name="eliminate" value="Y" checked >Eliminate columns containing >= <input type=text size="2" name="gapthresholdpercent" value="80" maxlength="3"> % gaps<br>
+<input type=checkbox name="disambiguate" value="Y" checked >Disambiguate ambiguous bases in monobase gap-free columns<br>
+<input type=checkbox name="bluntleft"  value="Y">Blunt start of sequence<br>
+<input type=checkbox name="bluntright" value="Y">Blunt end of sequence<br>
+</fieldset>
+<br>
+<input type="submit" name="submit;" value="Clean-up Sequences!"/>
+</form>
+
+</html>
+

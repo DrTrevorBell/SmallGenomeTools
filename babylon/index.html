@@ -1,0 +1,340 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>HVDR Babylon Translator</title>
+<link rel="stylesheet" type="text/css" href="/res/hvdr.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<style type="text/css">
+.hidden { visibility: hidden; }
+.unhidden { visibility: visible; }
+td { text-align : center; }
+td.shade1 { background: lightblue; }
+td.shade2 { background: #ffff99;w; }
+td.shade3 { background: pink; }
+fieldset { width: 50%; }
+input.aminoacid1 { text-align:center; background:lightblue; color:darkslategrey; font-weight:bold; }
+input.aminoacid2 { text-align:center; background:#ffff99; color:darkslategrey; font-weight:bold; }
+input.nucleotide { text-align:center; }
+div.instructions { font-family:monospace; }
+a:focus { outline: 0; }
+em.i { font-style:oblique; font-weight:normal; text-decoration:none; }
+em.b{ font-style:normal; font-weight:bold; text-decoration:none; }
+legend { font-weight:bold; padding:0.2em 0.5em; border:1px solid green; color:green; font-size:120%; font-family:monospace; background:lightgreen; }
+<!-- http://www.pixy.cz/blogg/clanky/css-fieldsetandlabels.html -->
+</style>
+
+<script type="text/javascript">
+
+function updateTable()
+{
+	var genotypeT = document.getElementById('genotype');
+	var genotype = genotypeT.options[genotypeT.selectedIndex].value;
+
+	function setValues(s1, e1, s2, e2, s3, e3, s4, e4, s5, e5, s6, e6, s7, e7, l1)
+	{
+		var item = document.getElementById('s1');
+		item.value = s1;
+		item = document.getElementById('e1');
+		item.value = e1;
+		item = document.getElementById('s2');
+		item.value = s2;
+		item = document.getElementById('e2');
+		item.value = e2;
+		item = document.getElementById('s3');
+		item.value = s3;
+		item = document.getElementById('e3');
+		item.value = e3;
+		item = document.getElementById('s4');
+		item.value = s4;
+		item = document.getElementById('e4');
+		item.value = e4;
+		item = document.getElementById('s5');
+		item.value = s5;
+		item = document.getElementById('e5');
+		item.value = e5;
+		item = document.getElementById('s6');
+		item.value = s6;
+		item = document.getElementById('e6');
+		item.value = e6;
+		item = document.getElementById('s7');
+		item.value = s7;
+		item = document.getElementById('e7');
+		item.value = e7;
+		item = document.getElementById('l1');
+		item.value = l1;
+	}
+
+	switch(genotype)
+	{
+		case 'A' : setValues(1814,1900,1901,2458,2307,1623,2854,3210,3211,154,155,835,1374,1838, 3221); break;
+		case 'B' : setValues(1814,1900,1901,2452,2307,1623,2848,3204,3205,154,155,835,1374,1838, 3215); break;
+		case 'C' : setValues(1814,1900,1901,2452,2307,1623,2848,3204,3205,154,155,835,1374,1838, 3215); break;
+		case 'D' : setValues(1814,1900,1901,2452,2307,1623,2848,3171,3172,154,155,835,1374,1838, 3182); break;
+		case 'E' : setValues(1814,1900,1901,2452,2307,1623,2848,3201,3202,154,155,835,1374,1838, 3212); break;
+		case 'F' : setValues(1814,1900,1901,2452,2307,1623,2848,3204,3205,154,155,835,1374,1838, 3215); break;
+		case 'G' : setValues(1814,1900,1901,2488,2343,1623,2884,3237,3238,154,155,835,1374,1838, 3248); break;  <!-- check s5 -->
+		case 'H' : setValues(1814,1900,1901,2452,2307,1623,2848,3204,3205,154,155,835,1374,1838, 3215); break;
+		case 'I' : setValues(0000,0000,0000,0000,0000,0000,0000,0000,0000,000,000,000,0000,0000, 0000); break;
+	}
+
+	updateAminoAcids(1); updateAminoAcids(2); updateAminoAcids(3); updateAminoAcids(4); updateAminoAcids(5); updateAminoAcids(6); updateAminoAcids(7);
+}
+
+function updateAminoAcids(aa)
+{
+	var start = parseInt(document.getElementById('s'+aa).value);
+	var end = parseInt(document.getElementById('e'+aa).value);
+	var length = parseInt(document.getElementById('l1').value);
+
+	if (isNaN(start) || start < 0)
+	{
+		document.getElementById('s'+aa).value = 0;
+		return;
+	}
+
+	if (isNaN(end) || end < 0)
+	{
+		document.getElementById('e'+aa).value = 0;
+		return;
+	}
+
+	if ((start > length) || (end > length))
+	{
+		alert('Value exceeds length. Table values NOT updated. Please correct.');
+		return;
+	}
+
+	if (end < start)
+	{
+		distance = length - start + 1 + end;
+	}
+		else
+		{
+			distance = end - start + 1;
+		}
+
+	remainder = (distance) % 3;
+	aacount = Math.floor(distance / 3);
+
+	if (remainder != 0)
+	{
+		aacount = aacount.toString() + '+' + remainder.toString()+'nt';
+	}
+		else
+		{
+			aacount = aacount.toString();
+		}
+
+	aaout = document.getElementById('aa'+aa);
+	aaout.value = aacount;
+
+}
+
+<!-- CHECK THAT VALUES ARE NUMBERS AND END > START -->
+
+<!-- note about amino acid output format: 29/0 and note that if end < start, then goes around; if equal, one base included -->
+
+<!-- Check length is a number  -->
+
+function updateLength()
+{
+	var length = parseInt(document.getElementById('l1').value);
+
+	if (isNaN(length) || length <= 0)
+	{
+		alert('Bad length. Table will now reset.');
+		updateTable();
+		return;
+	}
+
+	for (i=1;i<8;i++)
+	{
+		stest = parseInt(document.getElementById('s'+i).value);
+		etest = parseInt(document.getElementById('e'+i).value);
+		if ((length < stest) || (length < etest))
+		{
+			alert('Length is too short. Table values NOT updated. Please correct.');
+			return;
+		}
+	}
+
+	updateAminoAcids(1); updateAminoAcids(2); updateAminoAcids(3); updateAminoAcids(4); updateAminoAcids(5); updateAminoAcids(6); updateAminoAcids(7);
+}
+
+function checkForm()
+{
+	if (document.theform.infile.value.length < 1)
+	{
+		alert('Specify the input file.');
+		return false;
+	}
+	else if (document.theform.include1.checked == false && document.theform.include2.checked == false && document.theform.include3.checked == false && 
+                 document.theform.include4.checked == false && document.theform.include5.checked == false && document.theform.include6.checked == false && 
+                 document.theform.include7.checked == false)
+	{
+		alert('Specify at least one protein.');
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+</script>
+
+<noscript>
+<div class="dotted_red" style="border-width:1.5px; color:darkred; font-size:12px; font-family:monospace;" align="center">
+This site works better with JavaScript enabled. It is strongly recommended that you enable JavaScript and <a href="">reload</a> the page.
+</div>
+</noscript>
+</head>
+<body onload="updateTable();">
+<h1>HVDR Online Tools</h1>
+<div class="note">Hepatitis Virus Diversity Research <a href="http://www.wits.ac.za/health/hvdrp">Programme</a>, University of the Witwatersrand</div>
+<h2><img src="/res/babylon.png" style="vertical-align:middle"> HBV Babylon Translator</h2>
+
+<form method="post" action="/cgi-bin/babylon.cgi" enctype="multipart/form-data" onSubmit="return checkForm();" name="theform">
+
+<br>
+<fieldset>
+<legend>Specify genotype and/or co-ordinates</legend>
+
+<table border="1">
+<tr>
+<td rowspan="2">Protein</td>
+<td colspan="2" class="shade1">Pre-Core</td>
+<td colspan="2" class="shade2">Core</td>
+<td colspan="2" class="shade1">Pol</td>
+<td colspan="2" class="shade2">PreS1</td>
+<td colspan="2" class="shade1">PreS2</td>
+<td colspan="2" class="shade2">Surface</td>
+<td colspan="2" class="shade1">X</td>
+<td colspan="2" rowspan="2" class="shade3">Length</td>
+</tr>
+
+<tr>
+
+<td class="shade1">Start</td><td class="shade1">End</td>
+<td class="shade2">Start</td><td class="shade2">End</td>
+<td class="shade1">Start</td><td class="shade1">End</td>
+<td class="shade2">Start</td><td class="shade2">End</td>
+<td class="shade1">Start</td><td class="shade1">End</td>
+<td class="shade2">Start</td><td class="shade2">End</td>
+<td class="shade1">Start</td><td class="shade1">End</td>
+
+</tr>
+<tr>
+<td>
+<select name="genotype" id="genotype" onchange="javascript:updateTable();" onkeyup="javascript:updateTable();">
+<option value="A">Genotype A</option>
+<option value="B">Genotype B</option>
+<option value="C">Genotype C</option>
+<option value="D">Genotype D</option>
+<option value="E">Genotype E</option>
+<option value="F">Genotype F</option>
+<option value="G">Genotype G</option>
+<option value="H">Genotype H</option>
+<option value="I">Genotype I</option>
+</select>
+</td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s1" name="s1" onchange=javascript:updateAminoAcids(1)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e1" name="e1" onchange=javascript:updateAminoAcids(1)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s2" name="s2" onchange=javascript:updateAminoAcids(2)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e2" name="e2" onchange=javascript:updateAminoAcids(2)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s3" name="s3" onchange=javascript:updateAminoAcids(3)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e3" name="e3" onchange=javascript:updateAminoAcids(3)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s4" name="s4" onchange=javascript:updateAminoAcids(4)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e4" name="e4" onchange=javascript:updateAminoAcids(4)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s5" name="s5" onchange=javascript:updateAminoAcids(5)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e5" name="e5" onchange=javascript:updateAminoAcids(5)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s6" name="s6" onchange=javascript:updateAminoAcids(6)></td>
+<td class="shade2"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e6" name="e6" onchange=javascript:updateAminoAcids(6)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="s7" name="s7" onchange=javascript:updateAminoAcids(7)></td>
+<td class="shade1"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="e7" name="e7" onchange=javascript:updateAminoAcids(7)></td>
+<td class="shade3" colspan="2" rowspan="3"><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="l1" name="length" onchange=javascript:updateLength()></td>
+</tr>
+
+<tr>
+<td>Amino Acids</td>
+<td colspan="2"><input class="aminoacid1" type="text" disabled size="8" maxlength="8" value="0" id="aa1" name="aa1"></td>
+<td colspan="2"><input class="aminoacid2" type="text" disabled size="8" maxlength="8" value="0" id="aa2" name="aa2"></td>
+<td colspan="2"><input class="aminoacid1" type="text" disabled size="8" maxlength="8" value="0" id="aa3" name="aa3"></td>
+<td colspan="2"><input class="aminoacid2" type="text" disabled size="8" maxlength="8" value="0" id="aa4" name="aa4"></td>
+<td colspan="2"><input class="aminoacid1" type="text" disabled size="8" maxlength="8" value="0" id="aa5" name="aa5"></td>
+<td colspan="2"><input class="aminoacid2" type="text" disabled size="8" maxlength="8" value="0" id="aa6" name="aa6"></td>
+<td colspan="2"><input class="aminoacid1" type="text" disabled size="8" maxlength="8" value="0" id="aa7" name="aa7"></td>
+
+</tr>
+
+<tr>
+<td>Include</td>
+<td colspan="2" class="shade1"><input type="checkbox" checked id="include1" name="include1"</td>
+<td colspan="2" class="shade2"><input type="checkbox" checked id="include2" name="include2"</td>
+<td colspan="2" class="shade1"><input type="checkbox" checked id="include3" name="include3"</td>
+<td colspan="2" class="shade2"><input type="checkbox" checked id="include4" name="include4"</td>
+<td colspan="2" class="shade1"><input type="checkbox" checked id="include5" name="include5"</td>
+<td colspan="2" class="shade2"><input type="checkbox" checked id="include6" name="include6"</td>
+<td colspan="2" class="shade1"><input type="checkbox" checked id="include7" name="include7"</td>
+
+</tr>
+
+</table>
+<br>
+<div class="instructions">Co-ordinates adapted from Kramvis, A. <em class="i">et al</em>. (2005) <em class="i">Vaccine</em> <em class="b">23</em>.</div>
+<div class="instructions">Press the "Tab" key after changing any value to update the table. <a onclick="updateTable()"; href="javascript:void(0); style="-moz-outline-style: none;";">Reset</a> the table.</div>
+</fieldset>
+
+<br>
+<fieldset>
+<legend>Specify additional options</legend>
+<input type="checkbox" checked name="translate" id="translate" title="Translate"> Translate sequence data into proteins
+<br>
+<div class="instructions">A FASTA file is created for each protein selected in the table above. Each file contains the (translated) protein sequence for all input sequences. <em class="i">Unchecking</em> the box above will create FASTA file(s) containing <em class="i">nucleotide</em> sequence data rather than protein sequence data.</div>
+<br>
+<input type="checkbox" checked name="subs" id="subs" title="Substitute"> Replace '-' and '?' with 'N'
+<br>
+<div class="instructions">Replace '-' and '?' characters in the sequence with 'N' characters. This will allow an entire sequence containing one or more '-' or '?' characters to be translated. However, the amino acid sequence may contain at least one 'X' amino acid as a result. Note that depending on the position of the '-' and/or '?' characters in the reading frame, the replacement may result in other amino acids being returned.
+<!-- <br> -->
+<!-- <input type="radio" name="mode" id="mode" value="protein" checked> -->
+<!-- Generate one output file for each <em>protein</em> -->
+<!-- <br> -->
+<!-- <input type="radio" name="mode" id="mode" value="sequence" disabled> -->
+<!-- <del>Generate one output file for each <em>sequence</em></del> -->
+<!-- <br> -->
+
+</fieldset>
+
+<br>
+<fieldset>
+<legend>Specify input FASTA file (nucleotide sequence data)</legend>
+<input type="file" name="infile">
+<br><br>
+<div class="instructions">The file should contain (aligned) nucleotide sequence data in FASTA format, starting with the nucleotide at the <em class="i">Eco</em>R1 position.</div>
+</fieldset>
+
+<br>
+<input type="submit" value="Submit!">
+
+</form>
+
+
+<br>
+<div class="dotted_red">
+<p class="compact">
+&bull; ALL TOOLS ARE PROVIDED WITHOUT ANY WARRANTY &bull; CHECK ALL RESULTS CAREFULLY &bull;
+</p>
+<p class="compact">
+Queries or comments to ...
+<!-- Professor Anna Kramvis [Anna.Kramvis (@) wits.ac.za] -->
+</p>
+</div>
+<br>
+
+
+</body>
+
+</html>
+

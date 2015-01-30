@@ -1,0 +1,106 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>HVDR Pipeline: TreeMail</title>
+<link rel="stylesheet" type="text/css" href="/res/hvdr.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+
+
+<script language="JavaScript">
+function information()
+{
+	selection = document.getElementsByName('filter')[0].value
+	switch (selection) {
+		case "01" : alert("This mode automatically runs PHYLIP dnadist and neighbor on the input file specified. Kimura and lower-triangular settings are used for dnadist and lower-triangular setting is used for neighbor."); break;
+		case "02" : alert("This mode includes 1000 bootstrap replicates using PHYLIP seqboot and returns the consensus tree using PHYLIP consense. Bootstrap values represent the number of times the partition occurred out of 1000 replicates. See the 'results.txt' email attachment for more information."); break;
+	}
+}
+</script>
+
+<style type="text/css">
+
+.red {
+	background-color: #ff0000; text-align: left; font-style: italic;
+}
+.blue {
+	background-color: cornflowerblue;
+}
+.green {
+	background-color: #00ff00; text-align: left;
+}
+.magenta {
+	background-color: orchid;
+}
+.leftcell {
+	background-color: lightgreen; text-align: left;
+}
+.rightcell {
+	background-color: lightsalmon; text-align: right;
+}
+
+.hidden { visibility: hidden; }
+.unhidden { visibility: visible; }
+td { text-align : left; }
+td.shade1 { background: lightblue; }
+td.shade2 { background: #ffff99; }
+td.shade3 { background: pink; }
+fieldset { width: 50%; }
+input.aminoacid1 { text-align:center; background:lightblue; color:darkslategrey; font-weight:bold; }
+input.aminoacid2 { text-align:center; background:#ffff99; color:darkslategrey; font-weight:bold; }
+input.nucleotide { text-align:center; }
+div.instructions { font-family:monospace; }
+a:focus { outline: 0; }
+em.i { font-style:oblique; font-weight:normal; text-decoration:none; }
+em.b{ font-style:normal; font-weight:bold; text-decoration:none; }
+legend { font-weight:bold; padding:0.2em 0.5em; border:1px solid green; color:green; font-size:120%; font-family:monospace; background:lightgreen; }
+<!-- http://www.pixy.cz/blogg/clanky/css-fieldsetandlabels.html -->
+</style>
+
+<noscript>
+<div class="dotted_red" style="border-width:1.5px; color:darkred; font-size:12px; font-family:monospace;" align="center">
+This site works better with JavaScript enabled. It is strongly recommended that you enable JavaScript and <a href="">reload</a> the page.
+</div>
+</noscript>
+</head>
+<body>
+<h1>HVDR Online Tools</h1>
+<div class="note">Hepatitis Virus Diversity Research <a href="http://www.wits.ac.za/health/hvdrp">Programme</a>, University of the Witwatersrand</div>
+<h2><img src="/res/treemail.png" style="vertical-align:middle"> Pipeline: TreeMail</h2>
+
+<br>
+
+<div class="dotted_blue" style="border-width:1.5px; color:darkblue; font-size:12px; font-family:monospace;">
+<table cellpadding="10"><tr><td><a href="http://evolution.genetics.washington.edu/phylip.html"><img src="/res/phylipsmall.gif"></a></td>
+<td>This pipeline runs selected applications from the <a href="http://evolution.genetics.washington.edu/phylip.html">PHYLIP</a> package and emails the results to the address given below. Press the "Details" button below for more information about each mode. A current limitation of this implementation is that it will timeout and terminate an analysis after 1 hour. This will probably only be applicable to bootstrap analyses of several hundred long sequences.</td></tr></table>
+</div>
+
+<br>
+
+<form method="post" action="/cgi-bin/treemail.cgi" enctype="multipart/form-data">
+<fieldset><legend>Input Parameters</legend>
+<table>
+<tr><td>File (PHY format)</td><td><input type="file" name="infile" size="32"/></td></tr>
+<tr><td></td><td>If exporting from BioEdit, select Phylip version 4</td></tr>
+<tr><td></td><td>Output sequence data should not contain "?" characters</td></tr>
+<tr><td></td><td>The first 10 characters of output sequence names must be unique and must not contain brackets, commas, colons or semicolons</td></tr>
+
+<tr><td></td><td></td></tr>
+<tr><td>Specify Mode</td><td>
+		<select name="filter">
+			<option value="01">Neighbor only</option>
+			<option value="02">Neighbor with 1000 bootstrap replicates</option>
+		</select>
+		<input type="button" name="info" value="Details" onClick="information()">
+		</td></tr>
+<tr><td>Your Email Address:</td><td><input type="text" name="emailaddress" size=32></td></tr>
+</table>
+</fieldset>
+<br>
+Results will be emailed to the address given above.<br><br>
+Please be patient after pressing the button below. The file may take some time to upload and analyse.<br><br>
+<input type="submit" name="submit;" value="Run TreeMail!"/></form>
+
+</html>
+

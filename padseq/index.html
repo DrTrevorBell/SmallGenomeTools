@@ -1,0 +1,158 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+<title>HVDR PadSeq</title>
+<link rel="stylesheet" type="text/css" href="/res/hvdr.css"/>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+<style type="text/css">
+.hidden { visibility: hidden; }
+.unhidden { visibility: visible; }
+td { text-align : center; }
+td.shade1 { background: lightblue; }
+td.shade2 { background: #ffff99; }
+td.shade3 { background: pink; }
+fieldset { width: 50%; }
+input.aminoacid1 { text-align:center; background:lightblue; color:darkslategrey; font-weight:bold; }
+input.aminoacid2 { text-align:center; background:#ffff99; color:darkslategrey; font-weight:bold; }
+input.nucleotide { text-align:center; }
+div.instructions { font-family:monospace; }
+a:focus { outline: 0; }
+em.i { font-style:oblique; font-weight:normal; text-decoration:none; }
+em.b{ font-style:normal; font-weight:bold; text-decoration:none; }
+legend { font-weight:bold; padding:0.2em 0.5em; border:1px solid green; color:green; font-size:120%; font-family:monospace; background:lightgreen; }
+<!-- http://www.pixy.cz/blogg/clanky/css-fieldsetandlabels.html -->
+</style>
+
+<script type="text/javascript">
+
+function updateTable()
+{
+	var genotypeT = document.getElementById('genotype');
+	var genotype = genotypeT.options[genotypeT.selectedIndex].value;
+
+	function setValues(l1)
+	{
+		var item = document.getElementById('l1');
+		item.value = l1;
+	}
+
+	switch(genotype)
+	{
+		case 'A' : setValues(3221); break;
+		case 'B' : setValues(3215); break;
+		case 'C' : setValues(3215); break;
+		case 'D' : setValues(3182); break;
+		case 'E' : setValues(3212); break;
+		case 'F' : setValues(3215); break;
+		case 'G' : setValues(3248); break;  <!-- check s5 -->
+		case 'H' : setValues(3215); break;
+		case 'I' : setValues(0000); break;
+	}
+
+}
+
+function updateLength()
+{
+	var length = parseInt(document.getElementById('l1').value);
+
+	if (isNaN(length) || length <= 0)
+	{
+		alert('Bad length. Table will now reset.');
+		updateTable();
+		return;
+	}
+}
+
+function checkForm()
+{
+	if (document.theform.infile1.value.length < 1 || document.theform.infile2.value.length < 1)
+	{
+		alert('Specify all input files.');
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+</script>
+
+<noscript>
+<div class="dotted_red" style="border-width:1.5px; color:darkred; font-size:12px; font-family:monospace;" align="center">
+This site works better with JavaScript enabled. It is strongly recommended that you enable JavaScript and <a href="">reload</a> the page.
+</div>
+</noscript>
+</head>
+<body onload="updateTable();">
+<h1>HVDR Online Tools</h1>
+<div class="note">Hepatitis Virus Diversity Research <a href="http://www.wits.ac.za/health/hvdrp">Programme</a>, University of the Witwatersrand</div>
+<h2><img src="/res/padseq.png" style="vertical-align:middle"> HBV PadSeq</h2>
+
+<form method="post" action="/cgi-bin/padseq.cgi" enctype="multipart/form-data" onSubmit="return checkForm();" name="theform">
+
+<br>
+<fieldset>
+<legend>Specify genotype and/or length</legend>
+
+<table>
+<tr>
+<td>
+<select name="genotype" id="genotype" onchange="javascript:updateTable();" onkeyup="javascript:updateTable();">
+<option value="A">Genotype A</option>
+<option value="B">Genotype B</option>
+<option value="C">Genotype C</option>
+<option value="D">Genotype D</option>
+<option value="E">Genotype E</option>
+<option value="F">Genotype F</option>
+<option value="G">Genotype G</option>
+<option value="H">Genotype H</option>
+<option value="I">Genotype I</option>
+</select>
+</td>
+<td>Length</td>
+<td><input class="nucleotide" type="text" size="4" maxlength="4" value="0" id="l1" name="length" onchange=javascript:updateLength()></td>
+</tr>
+</table>
+</fieldset>
+
+<br>
+<fieldset>
+<legend>Specify backbone character</legend>
+Backbone template character
+<input type="text" size="1" maxlength="1" value="N" id="backbone" name="backbone">
+</fieldset>
+
+<br>
+<fieldset>
+<legend>Specify input FASTA files and co-ordinates</legend>
+<table>
+
+<tr>
+<td>Fragment 1 is in file</td>
+<td><input type="file" name="infile1"></td>
+<td>and must start at co-ordinate</td>
+<td><input type="text" size="4" maxlength="4" value="0" id="file1pos" name="file1pos"></td>
+</tr>
+
+<tr>
+<td>Fragment 2 is in file</td>
+<td><input type="file" name="infile2"></td>
+<td>and must start at co-ordinate</td>
+<td><input type="text" size="4" maxlength="4" value="0" id="file2pos" name="file2pos"></td>
+</tr>
+</table>
+
+<br>
+<div class="instructions">The files should contain (aligned) nucleotide sequence data in FASTA format. Each fragment will be placed at the specified co-ordinates on a backbone template of the specified character with the specified length. If incorrect values are specified or if some fragments are too long, it is possible for sequence data from the first fragment to be overwritten by sequence data from the second fragment. Check the output file carefully.</div>
+</fieldset>
+
+<br>
+<input type="submit" value="Submit!">
+
+</form>
+
+</html>
+
